@@ -1,8 +1,3 @@
-//texelSpaceInput0.xy    // Sample position for the current output pixel.
-//+ float2(0, -1)        // An offset from which to sample the input, specified in pixels.
-//* texelSpaceInput0.zw; // Multiplier that converts pixel offset to sample position offset.
-
-
 Texture2D InputTexture : register(t0);
 SamplerState InputSampler : register(s0);
 

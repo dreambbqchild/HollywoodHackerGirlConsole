@@ -31,22 +31,4 @@ void TakeScreenShot(HWND hWnd, ScreenShotResult& result)
 		}
 		ReleaseDC(hWnd, hdc);
 	}
-
-	//auto hDCWnd = GetDC(hWnd);
-	//auto hDCMem = CreateCompatibleDC(hDCWnd);
-	//int width = 0, height = 0;
-	//GetWindowSize(hWnd, width, height);
-
-	//auto hBitmap = CreateCompatibleBitmap(hDCWnd, width, height);
-
-	//SelectObject(hDCMem, hBitmap);
-	//auto result = BitBlt(hDCMem, 0, 0, width, height, hDCWnd, 0, 0, SRCCOPY);
-
-	//SaveHBITMAP(hDCMem, hBitmap);
-
-	//ReleaseDC(hWnd, hDCWnd);
-	//DeleteDC(hDCMem);
-	//DeleteObject(hBitmap);
-
-	//return result;
 }
