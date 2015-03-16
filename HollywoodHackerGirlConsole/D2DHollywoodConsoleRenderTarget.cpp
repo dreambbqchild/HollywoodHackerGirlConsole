@@ -23,7 +23,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			case WM_SETFOCUS:
 				target->GiveConsoleFocus();
 				break;
-			case WM_PAINT:
+			case WM_PAINT:				
 				target->Draw();
 				break;
 		}
@@ -68,7 +68,7 @@ void D2DHollywoodConsoleRenderTarget::CreateRenderTargetWindow(HWND hWndConsole,
 
 	// form for the image
 	hWnd = CreateWindowExA(0, CLASS_NAME, NULL, style, 0, 0, width, height, NULL, NULL, GetModuleHandle(0), this);
-	SetTimer(hWnd, 1, 24, (TIMERPROC) NULL);
+	SetTimer(hWnd, 1, 42, (TIMERPROC) NULL);
 
 	//Overlap Window
 	RECT rect;

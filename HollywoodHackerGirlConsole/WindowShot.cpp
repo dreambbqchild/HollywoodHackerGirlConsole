@@ -12,6 +12,7 @@ void GetWindowSize(HWND hWnd, int &width, int &height)
 
 void TakeScreenShot(HWND hWnd, ScreenShotResult& result)
 {
+	system("color 0D");
 	HDC hdc = GetWindowDC(hWnd);
 	HBITMAP hbitmap = 0;
 	if (hdc)
