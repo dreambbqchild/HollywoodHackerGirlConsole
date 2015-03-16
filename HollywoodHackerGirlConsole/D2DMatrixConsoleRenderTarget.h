@@ -24,6 +24,7 @@ private:
 
 public:
 	D2DMatrixConsoleRenderTarget(HWND hWndConsole);
+	void PostQuit(){ PostQuitMessage(0); }
 	void IncrementGreen(){ greenValue -= (1/42.0f); if(greenValue < 0.0f) greenValue = 1.0f; };
 	void GiveConsoleFocus(){SetForegroundWindow(hWndConsole);}
 	void Draw();

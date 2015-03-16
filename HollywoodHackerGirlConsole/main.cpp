@@ -13,7 +13,8 @@ int main(int argc, const char* argv)
 	int result = 0;
 	CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 	{
-		auto systemTask = create_task([]() { return system("launch.bat"); });
+		auto postQuit = false;
+		auto systemTask = create_task([&postQuit]() { auto result = system("launch.bat"); postQuit = true; return result;});
 		auto hConsole = GetConsoleWindow();
 
 		D2DMatrixConsoleRenderTarget target(hConsole);
@@ -21,6 +22,9 @@ int main(int argc, const char* argv)
 		MSG msg; BOOL bRet;
 		while((bRet = GetMessage( &msg, NULL, 0, 0 )) != 0)
 		{			
+			if(postQuit)
+				target.PostQuit();
+
 			// Translate the message and dispatch it to WindowProc()
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
