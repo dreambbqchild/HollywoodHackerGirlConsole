@@ -1,3 +1,2 @@
 @ECHO OFF
-COLOR 0D
 cmd
