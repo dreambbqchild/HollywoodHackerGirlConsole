@@ -17,7 +17,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				SetWindowLongPtr(hWnd, GWL_USERDATA, (LONG_PTR)target); 
 				break;
 			case WM_TIMER:
-				target->IncrementGreen();
+				target->IncrementOffset();
 				InvalidateRect(hWnd, NULL, FALSE);
 				break;
 			case WM_SETFOCUS:

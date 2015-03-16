@@ -25,7 +25,7 @@ private:
 public:
 	D2DHollywoodConsoleRenderTarget(HWND hWndConsole);
 	void PostQuit(){ PostQuitMessage(0); }
-	void IncrementGreen(){ offsetValue -= (1/42.0f); if(offsetValue < 0.0f) offsetValue = 1.0f; };
+	void IncrementOffset(){ offsetValue -= (1/180.0f); if(offsetValue < 0.0f) offsetValue = 1.0f; };
 	void GiveConsoleFocus(){SetForegroundWindow(hWndConsole);}
 	void Draw();
 };
