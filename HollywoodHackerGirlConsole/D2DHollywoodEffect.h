@@ -4,11 +4,11 @@
 #include <INITGUID.H>
 
 // {19176F4E-C481-437C-A0F7-A21533DF6589}
-DEFINE_GUID(GUID_D2DMatrixPixelShader, 0x19176f4e, 0xc481, 0x437c, 0xa0, 0xf7, 0xa2, 0x15, 0x33, 0xdf, 0x65, 0x89);
+DEFINE_GUID(GUID_D2DHollywoodPixelShader, 0x19176f4e, 0xc481, 0x437c, 0xa0, 0xf7, 0xa2, 0x15, 0x33, 0xdf, 0x65, 0x89);
 // {C4E54546-8E4E-4FAD-99AC-2F502360FAC8}
-DEFINE_GUID(CLSID_D2DMatrixEffect, 0xc4e54546, 0x8e4e, 0x4fad, 0x99, 0xac, 0x2f, 0x50, 0x23, 0x60, 0xfa, 0xc8);
+DEFINE_GUID(CLSID_D2DHollywoodEffect, 0xc4e54546, 0x8e4e, 0x4fad, 0x99, 0xac, 0x2f, 0x50, 0x23, 0x60, 0xfa, 0xc8);
 
-class D2DMatrixEffect  : public ID2D1EffectImpl, public ID2D1DrawTransform 
+class D2DHollywoodEffect  : public ID2D1EffectImpl, public ID2D1DrawTransform 
 {
 private:
 	Microsoft::WRL::ComPtr<ID2D1DrawInfo>      drawInfo; 
@@ -22,7 +22,7 @@ private:
 		D2D_POINT_2F bounds;
     } constants; 
  
-	D2DMatrixEffect();
+	D2DHollywoodEffect();
 	HRESULT UpdateConstants(); 
 
 public:
@@ -30,7 +30,7 @@ public:
 
 	static HRESULT Register(_In_ ID2D1Factory1* pFactory); 
  
-    static HRESULT __stdcall CreateD2DMatrixEffectImpl(_Outptr_ IUnknown** ppEffectImpl); 
+    static HRESULT __stdcall CreateD2DHollywoodEffectImpl(_Outptr_ IUnknown** ppEffectImpl); 
 
 	HRESULT SetOffset(float value); 
     float GetOffset() const; 

@@ -1,19 +1,19 @@
-#include "D2DMatrixConsoleRenderTarget.h"
-#include "D2DMatrixEffect.h"
+#include "D2DHollywoodConsoleRenderTarget.h"
+#include "D2DHollywoodEffect.h"
 #include "WindowShot.h"
 
 using namespace Microsoft::WRL;
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	D2DMatrixConsoleRenderTarget* target = (D2DMatrixConsoleRenderTarget*)GetWindowLongPtr(hWnd, GWL_USERDATA);
+	D2DHollywoodConsoleRenderTarget* target = (D2DHollywoodConsoleRenderTarget*)GetWindowLongPtr(hWnd, GWL_USERDATA);
 
 	if(uMsg == WM_CREATE || target)
 	{
 		switch(uMsg)
 		{
 			case WM_CREATE:
-				target = (D2DMatrixConsoleRenderTarget*)((LPCREATESTRUCT)lParam)->lpCreateParams;
+				target = (D2DHollywoodConsoleRenderTarget*)((LPCREATESTRUCT)lParam)->lpCreateParams;
 				SetWindowLongPtr(hWnd, GWL_USERDATA, (LONG_PTR)target); 
 				break;
 			case WM_TIMER:
@@ -43,8 +43,8 @@ D3D_FEATURE_LEVEL featureLevels[] =
     D3D_FEATURE_LEVEL_9_1
 };
 
-D2DMatrixConsoleRenderTarget::D2DMatrixConsoleRenderTarget(HWND hWndConsole)
-	: hWndConsole(hWndConsole), greenValue(1.0f)
+D2DHollywoodConsoleRenderTarget::D2DHollywoodConsoleRenderTarget(HWND hWndConsole)
+	: hWndConsole(hWndConsole), offsetValue(1.0f)
 {
 	int width, height;
 	GetWindowSize(hWndConsole, width, height);
@@ -52,12 +52,12 @@ D2DMatrixConsoleRenderTarget::D2DMatrixConsoleRenderTarget(HWND hWndConsole)
 	SetupDirect2D(width, height);
 }
 
-void D2DMatrixConsoleRenderTarget::CreateRenderTargetWindow(HWND hWndConsole, int width, int height)
+void D2DHollywoodConsoleRenderTarget::CreateRenderTargetWindow(HWND hWndConsole, int width, int height)
 {  
 	// set default style
 	auto style = WS_POPUP | WS_MINIMIZEBOX;
 
-	const char CLASS_NAME[]  = "D2DMatrixConsoleRenderTarget";
+	const char CLASS_NAME[]  = "D2DHollywoodConsoleRenderTarget";
 	WNDCLASSA wc = { };
 
     wc.lpfnWndProc   = WindowProc;
@@ -81,13 +81,13 @@ void D2DMatrixConsoleRenderTarget::CreateRenderTargetWindow(HWND hWndConsole, in
 	SetWindowPos(hWndConsole, nullptr, -(width + 60), 0, 0, 0, SWP_NOSIZE);
 }
 
-void D2DMatrixConsoleRenderTarget::SetupDirect2D(int width, int height)
+void D2DHollywoodConsoleRenderTarget::SetupDirect2D(int width, int height)
 {
 	D2D1_FACTORY_OPTIONS options;
 	ZeroMemory(&options, sizeof(D2D1_FACTORY_OPTIONS));
  
 	D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory1), &options, &pD2DFactory);
-	D2DMatrixEffect::Register(pD2DFactory.Get());
+	D2DHollywoodEffect::Register(pD2DFactory.Get());
 	
 	CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pWicImageFactory));
 
@@ -144,19 +144,19 @@ void D2DMatrixConsoleRenderTarget::SetupDirect2D(int width, int height)
 
 	//FINALLY!!! SETUP THE EFFECTS!!!
     pD2DContext->CreateEffect(CLSID_D2D1BitmapSource, &bitmapSourceEffect);
-	pD2DContext->CreateEffect(CLSID_D2DMatrixEffect, &matrixEffect);
+	pD2DContext->CreateEffect(CLSID_D2DHollywoodEffect, &hollywoodEffect);
 	
 	D2D_POINT_2F bounds = D2D1::Point2F(width, height);
-	matrixEffect->SetValue(D2DMatrixEffect::BOUNDS, bounds);
-	matrixEffect->SetInputEffect(0, bitmapSourceEffect.Get());
+	hollywoodEffect->SetValue(D2DHollywoodEffect::BOUNDS, bounds);
+	hollywoodEffect->SetInputEffect(0, bitmapSourceEffect.Get());
 }
 
-void D2DMatrixConsoleRenderTarget::Draw()
+void D2DHollywoodConsoleRenderTarget::Draw()
 {
 	ScreenShotResult result;
 	TakeScreenShot(hWndConsole, result);
 
-	matrixEffect->SetValue(D2DMatrixEffect::OFFSET_VALUE, greenValue);
+	hollywoodEffect->SetValue(D2DHollywoodEffect::OFFSET_VALUE, offsetValue);
 
 	ComPtr<IWICBitmap> bitmapWindow;
 	pWicImageFactory->CreateBitmapFromHBITMAP(result.hBitmap, nullptr, WICBitmapIgnoreAlpha, &bitmapWindow);
@@ -165,13 +165,13 @@ void D2DMatrixConsoleRenderTarget::Draw()
 
 	pD2DContext->BeginDraw();
     pD2DContext->Clear( D2D1::ColorF(D2D1::ColorF::SkyBlue) );
-	pD2DContext->DrawImage(matrixEffect.Get());
+	pD2DContext->DrawImage(hollywoodEffect.Get());
 	pD2DContext->EndDraw();
 	
 	Present();
 }
 
-void D2DMatrixConsoleRenderTarget::Present()
+void D2DHollywoodConsoleRenderTarget::Present()
 {
 	DXGI_PRESENT_PARAMETERS parameters = { 0 };
 	parameters.DirtyRectsCount = 0;

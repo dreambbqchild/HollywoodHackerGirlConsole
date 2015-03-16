@@ -90,20 +90,20 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="D2DMatrixEffect.cpp" />
+    <ClCompile Include="D2DHollywoodEffect.cpp" />
     <ClCompile Include="d2dSetup.h" />
-    <ClCompile Include="D2DMatrixConsoleRenderTarget.cpp" />
+    <ClCompile Include="D2DHollywoodConsoleRenderTarget.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="WindowShot.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D2DMatrixConsoleRenderTarget.h" />
-    <ClInclude Include="D2DMatrixEffect.h" />
-    <ClInclude Include="D2DMatrixEffectShader.h" />
+    <ClInclude Include="D2DHollywoodConsoleRenderTarget.h" />
+    <ClInclude Include="D2DHollywoodEffect.h" />
+    <ClInclude Include="D2DHollywoodEffectShader.h" />
     <ClInclude Include="WindowShot.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="D2DMatrixEffect.hlsl">
+    <FxCompile Include="D2DHollywoodEffect.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0_level_9_1</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
@@ -128,7 +128,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="D2DMatrixEffect.cso" />
+    <None Include="D2DHollywoodEffect.cso" />
     <None Include="launch.bat" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -18,44 +18,44 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D2DMatrixConsoleRenderTarget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="d2dSetup.h">
       <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="D2DMatrixEffect.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WindowShot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="D2DHollywoodEffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D2DHollywoodConsoleRenderTarget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D2DMatrixConsoleRenderTarget.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="D2DMatrixEffect.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="D2DMatrixEffectShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="WindowShot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="D2DHollywoodEffectShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D2DHollywoodEffect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D2DHollywoodConsoleRenderTarget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="D2DMatrixEffect.hlsl">
-      <Filter>Resource Files</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="D2DMatrixEffect.cso">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="launch.bat">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="D2DHollywoodEffect.cso">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="D2DHollywoodEffect.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

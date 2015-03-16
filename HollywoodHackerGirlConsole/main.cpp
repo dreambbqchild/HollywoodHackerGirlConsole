@@ -1,6 +1,6 @@
 #include <Windows.h>
 #include <ppltasks.h>
-#include "D2DMatrixConsoleRenderTarget.h"
+#include "D2DHollywoodConsoleRenderTarget.h"
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "d3d11.lib")
@@ -17,7 +17,7 @@ int main(int argc, const char* argv)
 		auto systemTask = create_task([&postQuit]() { auto result = system("launch.bat"); postQuit = true; return result;});
 		auto hConsole = GetConsoleWindow();
 
-		D2DMatrixConsoleRenderTarget target(hConsole);
+		D2DHollywoodConsoleRenderTarget target(hConsole);
 
 		MSG msg; BOOL bRet;
 		while((bRet = GetMessage( &msg, NULL, 0, 0 )) != 0)

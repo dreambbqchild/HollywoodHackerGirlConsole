@@ -1,6 +1,6 @@
-#include "D2DMatrixEffect.h"
+#include "D2DHollywoodEffect.h"
 #include <d2d1effecthelpers.h>
-#include "D2DMatrixEffectShader.h"
+#include "D2DHollywoodEffectShader.h"
 #include <fstream>
 
 const UINT32 D2DMatrixPixelShader_InstructionCount = 4;
@@ -9,10 +9,10 @@ const UINT32 D2DMatrixPixelShader_InstructionCount = 4;
 
 using namespace std;
 
-HRESULT __stdcall D2DMatrixEffect::CreateD2DMatrixEffectImpl(_Outptr_ IUnknown** ppEffectImpl) 
+HRESULT __stdcall D2DHollywoodEffect::CreateD2DHollywoodEffectImpl(_Outptr_ IUnknown** ppEffectImpl) 
 { 
     // Since the object's refcount is initialized to 1, we don't need to AddRef here. 
-    *ppEffectImpl = static_cast<ID2D1EffectImpl*>(new (std::nothrow) D2DMatrixEffect()); 
+    *ppEffectImpl = static_cast<ID2D1EffectImpl*>(new (std::nothrow) D2DHollywoodEffect()); 
  
     if (*ppEffectImpl == nullptr) 
     { 
@@ -24,7 +24,7 @@ HRESULT __stdcall D2DMatrixEffect::CreateD2DMatrixEffectImpl(_Outptr_ IUnknown**
     } 
 } 
 
-HRESULT D2DMatrixEffect::Register(_In_ ID2D1Factory1* pFactory) 
+HRESULT D2DHollywoodEffect::Register(_In_ ID2D1Factory1* pFactory) 
 { 
     // The inspectable metadata of an effect is defined in XML. This can be passed in from an external source 
     // as well, however for simplicity we just inline the XML. 
@@ -65,42 +65,42 @@ HRESULT D2DMatrixEffect::Register(_In_ ID2D1Factory1* pFactory)
     // This registers the effect with the factory, which will make the effect 
     // instantiatable. 
     return pFactory->RegisterEffectFromString( 
-        CLSID_D2DMatrixEffect, 
+        CLSID_D2DHollywoodEffect, 
         pszXml, 
         bindings, 
         ARRAYSIZE(bindings), 
-        CreateD2DMatrixEffectImpl 
+        CreateD2DHollywoodEffectImpl 
         ); 
 } 
  
-D2DMatrixEffect::D2DMatrixEffect() : refCount(1) 
+D2DHollywoodEffect::D2DHollywoodEffect() : refCount(1) 
 {
 
 }
 
-float D2DMatrixEffect::GetOffset() const
+float D2DHollywoodEffect::GetOffset() const
 {
 	return constants.offset;
 }
 
-HRESULT D2DMatrixEffect::SetOffset(float value)
+HRESULT D2DHollywoodEffect::SetOffset(float value)
 {
 	constants.offset = value;
 	return S_OK;
 }
 
-D2D_POINT_2F D2DMatrixEffect::GetBounds() const
+D2D_POINT_2F D2DHollywoodEffect::GetBounds() const
 {
 	return constants.bounds;
 }
 
-HRESULT D2DMatrixEffect::SetBounds(D2D_POINT_2F value)
+HRESULT D2DHollywoodEffect::SetBounds(D2D_POINT_2F value)
 {
 	constants.bounds = value;
 	return S_OK;
 }
 
-IFACEMETHODIMP D2DMatrixEffect::Initialize( 
+IFACEMETHODIMP D2DHollywoodEffect::Initialize( 
     _In_ ID2D1EffectContext* pEffectContext, 
     _In_ ID2D1TransformGraph* pTransformGraph 
     ) 
@@ -109,7 +109,7 @@ IFACEMETHODIMP D2DMatrixEffect::Initialize(
 	effectContext = pEffectContext; 
  
 	ifstream infile;
-	infile.open("D2DMatrixEffect.cso", ios::binary |  ios::ate);
+	infile.open("D2DHollywoodEffect.cso", ios::binary |  ios::ate);
 	int length = infile.tellg();
 	infile.seekg (0, ios::beg);
 	
@@ -117,7 +117,7 @@ IFACEMETHODIMP D2DMatrixEffect::Initialize(
 	infile.read(data, length);
 	infile.close();
  
-	hr = pEffectContext->LoadPixelShader(GUID_D2DMatrixPixelShader, reinterpret_cast<BYTE*>(data), length);
+	hr = pEffectContext->LoadPixelShader(GUID_D2DHollywoodPixelShader, reinterpret_cast<BYTE*>(data), length);
  
 	delete[] data;
 	
@@ -136,32 +136,32 @@ IFACEMETHODIMP D2DMatrixEffect::Initialize(
 	return hr; 
 }
 
-HRESULT D2DMatrixEffect::UpdateConstants() 
+HRESULT D2DHollywoodEffect::UpdateConstants() 
 {  
     return drawInfo->SetPixelShaderConstantBuffer(reinterpret_cast<BYTE*>(&constants), sizeof(constants)); 
 } 
  
-IFACEMETHODIMP D2DMatrixEffect::PrepareForRender(D2D1_CHANGE_TYPE changeType) 
+IFACEMETHODIMP D2DHollywoodEffect::PrepareForRender(D2D1_CHANGE_TYPE changeType) 
 { 
     return UpdateConstants(); 
 } 
  
 // SetGraph is only called when the number of inputs changes. This never happens as we publish this effect 
 // as a single input effect. 
-IFACEMETHODIMP D2DMatrixEffect::SetGraph(_In_ ID2D1TransformGraph* pGraph) 
+IFACEMETHODIMP D2DHollywoodEffect::SetGraph(_In_ ID2D1TransformGraph* pGraph) 
 { 
     return E_NOTIMPL; 
 } 
  
 // Called to assign a new render info class, which is used to inform D2D on 
 // how to set the state of the GPU. 
-IFACEMETHODIMP D2DMatrixEffect::SetDrawInfo(_In_ ID2D1DrawInfo* pDrawInfo) 
+IFACEMETHODIMP D2DHollywoodEffect::SetDrawInfo(_In_ ID2D1DrawInfo* pDrawInfo) 
 { 
     HRESULT hr = S_OK; 
  
     drawInfo = pDrawInfo; 
  
-    hr = drawInfo->SetPixelShader(GUID_D2DMatrixPixelShader); 
+    hr = drawInfo->SetPixelShader(GUID_D2DHollywoodPixelShader); 
  
     if (SUCCEEDED(hr)) 
     { 
@@ -175,7 +175,7 @@ IFACEMETHODIMP D2DMatrixEffect::SetDrawInfo(_In_ ID2D1DrawInfo* pDrawInfo)
 // Calculates the mapping between the output and input rects. In this case, 
 // we want to request an expanded region to account for pixels that the ripple 
 // may need outside of the bounds of the destination. 
-IFACEMETHODIMP D2DMatrixEffect::MapOutputRectToInputRects( 
+IFACEMETHODIMP D2DHollywoodEffect::MapOutputRectToInputRects( 
     _In_ const D2D1_RECT_L* pOutputRect, 
     _Out_writes_(inputRectCount) D2D1_RECT_L* pInputRects, 
     UINT32 inputRectCount 
@@ -192,7 +192,7 @@ IFACEMETHODIMP D2DMatrixEffect::MapOutputRectToInputRects(
     return S_OK; 
 } 
  
-IFACEMETHODIMP D2DMatrixEffect::MapInputRectsToOutputRect( 
+IFACEMETHODIMP D2DHollywoodEffect::MapInputRectsToOutputRect( 
     _In_reads_(inputRectCount) CONST D2D1_RECT_L* pInputRects, 
     _In_reads_(inputRectCount) CONST D2D1_RECT_L* pInputOpaqueSubRects, 
     UINT32 inputRectCount, 
@@ -216,7 +216,7 @@ IFACEMETHODIMP D2DMatrixEffect::MapInputRectsToOutputRect(
     return S_OK; 
 } 
  
-IFACEMETHODIMP D2DMatrixEffect::MapInvalidRect( 
+IFACEMETHODIMP D2DHollywoodEffect::MapInvalidRect( 
     UINT32 inputIndex, 
     D2D1_RECT_L invalidInputRect, 
     _Out_ D2D1_RECT_L* pInvalidOutputRect 
@@ -230,7 +230,7 @@ IFACEMETHODIMP D2DMatrixEffect::MapInvalidRect(
     return hr; 
 } 
 
-IFACEMETHODIMP_(UINT32) D2DMatrixEffect::GetInputCount() const 
+IFACEMETHODIMP_(UINT32) D2DHollywoodEffect::GetInputCount() const 
 { 
     return 1; 
 } 
@@ -238,13 +238,13 @@ IFACEMETHODIMP_(UINT32) D2DMatrixEffect::GetInputCount() const
 // D2D ensures that that effects are only referenced from one thread at a time. 
 // To improve performance, we simply increment/decrement our reference count 
 // rather than use atomic InterlockedIncrement()/InterlockedDecrement() functions. 
-IFACEMETHODIMP_(ULONG) D2DMatrixEffect::AddRef() 
+IFACEMETHODIMP_(ULONG) D2DHollywoodEffect::AddRef() 
 { 
     refCount++; 
     return refCount; 
 } 
  
-IFACEMETHODIMP_(ULONG) D2DMatrixEffect::Release() 
+IFACEMETHODIMP_(ULONG) D2DHollywoodEffect::Release() 
 { 
     refCount--; 
  
@@ -262,7 +262,7 @@ IFACEMETHODIMP_(ULONG) D2DMatrixEffect::Release()
 // This enables the stack of parent interfaces to be queried. In the instance 
 // of the Ripple interface, this method simply enables the developer 
 // to cast a Ripple instance to an ID2D1EffectImpl or IUnknown instance. 
-IFACEMETHODIMP D2DMatrixEffect::QueryInterface( 
+IFACEMETHODIMP D2DHollywoodEffect::QueryInterface( 
     _In_ REFIID riid, 
     _Outptr_ void** ppOutput 
     ) 

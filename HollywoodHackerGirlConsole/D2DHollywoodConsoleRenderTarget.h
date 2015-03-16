@@ -1,10 +1,10 @@
 #pragma once
 #include "d2dSetup.h"
 
-class D2DMatrixConsoleRenderTarget
+class D2DHollywoodConsoleRenderTarget
 {
 private:
-	float greenValue;
+	float offsetValue;
 	HWND hWnd;
 	HWND hWndConsole;
 	Microsoft::WRL::ComPtr<ID3D11Device1> pD3DDevice;
@@ -16,16 +16,16 @@ private:
 	Microsoft::WRL::ComPtr<ID2D1DeviceContext> pD2DContext;
 	Microsoft::WRL::ComPtr<IWICImagingFactory2> pWicImageFactory;
 	Microsoft::WRL::ComPtr<ID2D1Effect> bitmapSourceEffect;
-	Microsoft::WRL::ComPtr<ID2D1Effect> matrixEffect;
+	Microsoft::WRL::ComPtr<ID2D1Effect> hollywoodEffect;
 
 	void CreateRenderTargetWindow(HWND hWndConsole, int width, int height);
 	void SetupDirect2D(int width, int height);
 	void Present();
 
 public:
-	D2DMatrixConsoleRenderTarget(HWND hWndConsole);
+	D2DHollywoodConsoleRenderTarget(HWND hWndConsole);
 	void PostQuit(){ PostQuitMessage(0); }
-	void IncrementGreen(){ greenValue -= (1/42.0f); if(greenValue < 0.0f) greenValue = 1.0f; };
+	void IncrementGreen(){ offsetValue -= (1/42.0f); if(offsetValue < 0.0f) offsetValue = 1.0f; };
 	void GiveConsoleFocus(){SetForegroundWindow(hWndConsole);}
 	void Draw();
 };
