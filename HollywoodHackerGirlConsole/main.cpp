@@ -16,6 +16,7 @@ int main(int argc, const char* argv)
 		auto postQuit = false;
 		auto systemTask = create_task([&postQuit]() { auto result = system("launch.bat"); postQuit = true; return result;});
 		auto hConsole = GetConsoleWindow();
+		ShowWindow(hConsole, SW_MAXIMIZE);
 
 		D2DHollywoodConsoleRenderTarget target(hConsole);
 
