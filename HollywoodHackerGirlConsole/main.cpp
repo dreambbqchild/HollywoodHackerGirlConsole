@@ -8,13 +8,17 @@
 
 using namespace concurrency;
 
-int main(int argc, const char* argv)
+int main(int argc, const char* argv[])
 {
 	int result = 0;
 	CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 	{
+		const char* systemCall = "launch.bat";
+		if (argc > 1)
+			systemCall = argv[1];
+
 		auto postQuit = false;
-		auto systemTask = create_task([&postQuit]() { auto result = system("launch.bat"); postQuit = true; return result;});
+		auto systemTask = create_task([&postQuit, &systemCall]() { auto result = system(systemCall); postQuit = true; return result; });
 		auto hConsole = GetConsoleWindow();
 		ShowWindow(hConsole, SW_MAXIMIZE);
 
