@@ -13,7 +13,7 @@ int main(int argc, const char* argv[])
 	int result = 0;
 	CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 	{
-		const char* systemCall = "launch.bat";
+		const char* systemCall = "cmd";
 		if (argc > 1)
 			systemCall = argv[1];
 
