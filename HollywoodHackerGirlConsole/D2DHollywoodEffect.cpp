@@ -11,7 +11,6 @@ using namespace std;
 
 HRESULT __stdcall D2DHollywoodEffect::CreateD2DHollywoodEffectImpl(_Outptr_ IUnknown** ppEffectImpl) 
 { 
-    // Since the object's refcount is initialized to 1, we don't need to AddRef here. 
     *ppEffectImpl = static_cast<ID2D1EffectImpl*>(new (std::nothrow) D2DHollywoodEffect()); 
  
     if (*ppEffectImpl == nullptr) 
@@ -26,8 +25,6 @@ HRESULT __stdcall D2DHollywoodEffect::CreateD2DHollywoodEffectImpl(_Outptr_ IUnk
 
 HRESULT D2DHollywoodEffect::Register(_In_ ID2D1Factory1* pFactory) 
 { 
-    // The inspectable metadata of an effect is defined in XML. This can be passed in from an external source 
-    // as well, however for simplicity we just inline the XML. 
     PCWSTR pszXml = 
         XML( 
             <?xml version='1.0'?> 
@@ -54,16 +51,12 @@ HRESULT D2DHollywoodEffect::Register(_In_ ID2D1Factory1* pFactory)
             </Effect> 
             ); 
  
-    // This defines the bindings from specific properties to the callback functions 
-    // on the class that ID2D1Effect::SetValue() & GetValue() will call. 
     const D2D1_PROPERTY_BINDING bindings[] = 
     { 
         D2D1_VALUE_TYPE_BINDING(L"Offset", &SetOffset, &GetOffset), 
         D2D1_VALUE_TYPE_BINDING(L"Bounds", &SetBounds, &GetBounds) 
     }; 
  
-    // This registers the effect with the factory, which will make the effect 
-    // instantiatable. 
     return pFactory->RegisterEffectFromString( 
         CLSID_D2DHollywoodEffect, 
         pszXml, 
@@ -121,15 +114,8 @@ IFACEMETHODIMP D2DHollywoodEffect::Initialize(
  
 	delete[] data;
 	
-    // This loads the shader into the Direct2D image effects system and associates it with the GUID passed in. 
-    // If this method is called more than once (say by other instances of the effect) with the same GUID, 
-    // the system will simply do nothing, ensuring that only one instance of a shader is stored regardless of how 
-    // many time it is used. 
     if (SUCCEEDED(hr)) 
     { 
-        // The graph consists of a single transform. In fact, this class is the transform, 
-        // reducing the complexity of implementing an effect when all we need to 
-        // do is use a single pixel shader. 
         hr = pTransformGraph->SetSingleTransformNode(this); 
     }
  
@@ -146,15 +132,11 @@ IFACEMETHODIMP D2DHollywoodEffect::PrepareForRender(D2D1_CHANGE_TYPE changeType)
     return UpdateConstants(); 
 } 
  
-// SetGraph is only called when the number of inputs changes. This never happens as we publish this effect 
-// as a single input effect. 
 IFACEMETHODIMP D2DHollywoodEffect::SetGraph(_In_ ID2D1TransformGraph* pGraph) 
 { 
     return E_NOTIMPL; 
 } 
- 
-// Called to assign a new render info class, which is used to inform D2D on 
-// how to set the state of the GPU. 
+
 IFACEMETHODIMP D2DHollywoodEffect::SetDrawInfo(_In_ ID2D1DrawInfo* pDrawInfo) 
 { 
     HRESULT hr = S_OK; 
@@ -162,27 +144,17 @@ IFACEMETHODIMP D2DHollywoodEffect::SetDrawInfo(_In_ ID2D1DrawInfo* pDrawInfo)
     drawInfo = pDrawInfo; 
  
     hr = drawInfo->SetPixelShader(GUID_D2DHollywoodPixelShader); 
- 
-    if (SUCCEEDED(hr)) 
-    { 
-        // Providing this hint allows D2D to optimize performance when processing large images. 
-		//drawInfo->SetInstructionCountHint(D2DMatrixPixelShader_InstructionCount); 
-    } 
+
  
     return hr; 
 } 
  
-// Calculates the mapping between the output and input rects. In this case, 
-// we want to request an expanded region to account for pixels that the ripple 
-// may need outside of the bounds of the destination. 
 IFACEMETHODIMP D2DHollywoodEffect::MapOutputRectToInputRects( 
     _In_ const D2D1_RECT_L* pOutputRect, 
     _Out_writes_(inputRectCount) D2D1_RECT_L* pInputRects, 
     UINT32 inputRectCount 
     ) const 
 { 
-    // This effect has exactly one input, so if there is more than one input rect, 
-    // something is wrong. 
     if (inputRectCount != 1) 
     { 
         return E_INVALIDARG; 
@@ -200,8 +172,6 @@ IFACEMETHODIMP D2DHollywoodEffect::MapInputRectsToOutputRect(
     _Out_ D2D1_RECT_L* pOutputOpaqueSubRect 
     ) 
 { 
-    // This effect has exactly one input, so if there is more than one input rect, 
-    // something is wrong. 
     if (inputRectCount != 1) 
     { 
         return E_INVALIDARG; 
@@ -210,7 +180,6 @@ IFACEMETHODIMP D2DHollywoodEffect::MapInputRectsToOutputRect(
     *pOutputRect = pInputRects[0]; 
     inputRect = pInputRects[0]; 
  
-    // Indicate that entire output might contain transparency. 
     ZeroMemory(pOutputOpaqueSubRect, sizeof(*pOutputOpaqueSubRect)); 
  
     return S_OK; 
@@ -224,7 +193,6 @@ IFACEMETHODIMP D2DHollywoodEffect::MapInvalidRect(
 { 
     HRESULT hr = S_OK; 
  
-    // Indicate that the entire output may be invalid. 
     *pInvalidOutputRect = inputRect; 
  
     return hr; 
@@ -235,9 +203,6 @@ IFACEMETHODIMP_(UINT32) D2DHollywoodEffect::GetInputCount() const
     return 1; 
 } 
  
-// D2D ensures that that effects are only referenced from one thread at a time. 
-// To improve performance, we simply increment/decrement our reference count 
-// rather than use atomic InterlockedIncrement()/InterlockedDecrement() functions. 
 IFACEMETHODIMP_(ULONG) D2DHollywoodEffect::AddRef() 
 { 
     refCount++; 
@@ -259,9 +224,6 @@ IFACEMETHODIMP_(ULONG) D2DHollywoodEffect::Release()
     } 
 } 
  
-// This enables the stack of parent interfaces to be queried. In the instance 
-// of the Ripple interface, this method simply enables the developer 
-// to cast a Ripple instance to an ID2D1EffectImpl or IUnknown instance. 
 IFACEMETHODIMP D2DHollywoodEffect::QueryInterface( 
     _In_ REFIID riid, 
     _Outptr_ void** ppOutput 
