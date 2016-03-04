@@ -30,10 +30,10 @@ HRESULT D2DHollywoodEffect::Register(_In_ ID2D1Factory1* pFactory)
             <?xml version='1.0'?> 
             <Effect> 
                 <!-- System Properties --> 
-                <Property name='DisplayName' type='string' value='Matrix'/> 
-                <Property name='Author' type='string' value='Microsoft Corporation'/> 
+                <Property name='DisplayName' type='string' value='Hollywood Effect'/> 
+                <Property name='Author' type='string' value='PAR'/> 
                 <Property name='Category' type='string' value='Stylize'/> 
-                <Property name='Description' type='string' value='Adds a ripple effect that can be animated'/> 
+                <Property name='Description' type='string' value='Rainbow gradient effect so console looks like something in Hackers'/> 
                 <Inputs> 
                     <Input name='Source'/> 
                 </Inputs> 
